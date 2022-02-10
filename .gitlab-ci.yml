@@ -1,0 +1,27 @@
+image: maven:latest
+
+cache:
+  paths:
+    - target/
+
+build:
+  stage: build
+  script:
+    - mvn clean install
+
+test:
+  stage: test
+  script:
+    - echo "Running tests... "
+    - mvn verify
+    - echo "Tests Completed"
+    - echo "This job collects and move the serenity report to public"
+    - mkdir public
+    - mv target/site/serenity/* public
+
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - public
+
